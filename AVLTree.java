@@ -1,6 +1,6 @@
 
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** Francisco Garzon / COMP 400C ***
  *
  * This java file is a Java object implementing simple AVL Tree.
  * You are to complete the deleteElement method.
@@ -343,24 +343,87 @@ class LUC_AVLTree {
 
     private Node deleteElement(int value, Node node) {
 
-        /*
-         * ADD CODE HERE
-         * 
-         * NOTE, that you should use the existing coded private methods
-         * in this file, which include:
-         *      - minValueNode,
-         *      - getMaxHeight,
-         *      - getHeight,
-         *      - getBalanceFactor,
-         *      - LLRotation
-         *      - RRRotation,
-         *      - LRRotation,
-         *      - RLRotation.
-         *
-         * To understand what each of these methods do, see the method prologues and
-         * code for each. You can also look at the method InsertElement, as it has do
-         * do many of the same things as this method.
-         */
+        // 1. if the node passed as a param is null, we return null (nothing to delete)
+        if (node ==null){
+            return null;
+        }
+
+        // 2. recurs down the tree to go either right or left
+        if (value < node.value){
+
+            // if the value is less than current node, we go left
+            node.leftChild = deleteElement(value, node.leftChild);
+
+        } else if (value > node.value) {
+
+            // if the value is more than current node, we go right
+            node.rightChild = deleteElement(value, node.rightChild);
+
+            // 4. a. when we find the node to delete, and has no children
+        } else if(node.leftChild == null && node.rightChild == null){
+            return null;
+
+        }
+            // b. if only one subtree
+        else if (node.leftChild == null || node.rightChild == null) {
+            // assign approp subtree to this node
+            if (node.leftChild != null){
+                // only left child exists, move subtree up
+                node.value = node.leftChild.value;
+                node.rightChild = node.leftChild.rightChild;
+                node.leftChild = node.leftChild.leftChild;
+
+            } else {
+                // only right child exists, move subtree up
+                node.value = node.rightChild.value;
+                node.leftChild = node.rightChild.leftChild;
+                node.rightChild = node.rightChild.rightChild;
+
+            }
+
+            }
+        // c. Node with left and right subtree
+        else {
+            // i. find in-order successor node via minValNode() - smallest in the right subtree
+            Node currentNode = minValueNode(node.rightChild);
+
+            // ii. copy in-order successor node's value to this node's value
+            node.value = currentNode.value;
+
+            // iii. delete the in-order successor node via deleteElement()
+            node.rightChild = deleteElement(currentNode.value, node.rightChild);
+
+        }
+
+        // 5. Tree has been manipulated
+        // i. recalculate node's height
+        node.height = getMaxHeight(getHeight(node.leftChild),getHeight(node.rightChild))+1;
+        // ii. recaculate node's bf via getBalance()
+        int balanceNode = getBalanceFactor(node);
+
+        if (balanceNode > 1){
+            // left heavy
+            if (getBalanceFactor(node.leftChild) >= 0){
+                // left-left case
+                return LLRotation(node);
+            } else {
+                //left-right case
+                return LRRotation(node);
+            }
+
+        } else if (balanceNode <-1) {
+            // right heavy
+            if(getBalanceFactor(node.rightChild) <=0){
+                // right-right case
+                return RRRotation(node);
+
+            } else {
+                // right-left case
+                return RLRotation(node);
+            }
+
+        }
+
 
         return node;
     }

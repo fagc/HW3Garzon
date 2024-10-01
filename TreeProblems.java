@@ -1,5 +1,5 @@
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** Francisco Garzon / COMP 400C ***
  *
  * This java file contains several simple tree problems that need to be
  * codified. These routines  must use the TreeMap and TreeSet library
@@ -18,16 +18,25 @@ public class TreeProblems {
    * that are NOT in both sets. In other words, return a TreeSet of all the
    * elements that are in one set but not the other.
    */
-  
+
   public static Set<Integer> different(Set<Integer> setA, Set<Integer> setB) {
 
-    // INSERT CODE HERE - DO NOT FORGET TO PLACE YOUR NAME ABOVE
-    //
-    // This can be done numerous ways, but once such will only that
-    // *several* lines of code. Hint: create two temporary TreeSets and utilize the
-    // methods retainAll(), addAll(), and removeAll(). But in the end, get something to work.
+    // create two temporary TreeSets and utilize the methods retainAll(), addAll(), and removeAll()
+    Set<Integer> tempSetA = new TreeSet<>(setA);
+    Set<Integer> tempSetB = new TreeSet<>(setB);
 
-    return setA;
+    // we can remove all elements from A also in B
+    tempSetA.removeAll(setB);
+
+    // we can remove all elements from B also in A
+    tempSetB.removeAll(setA);
+
+    // then we can combine the two sets and have only elements of one of them
+    Set<Integer> setDifference = new TreeSet<>(tempSetA);
+    setDifference.addAll(tempSetB);
+
+    // return the difference
+    return setDifference;
   }
 
 
@@ -40,9 +49,9 @@ public class TreeProblems {
 
   public static void removeEven(Map<Integer, String> treeMap) {
 
-    // INSERT CODE HERE.
+    // using the ArrayList removeIf () Java library
+    treeMap.entrySet().removeIf(thisKey -> thisKey.getKey() % 2 ==0);
 
-    return;
   }
 
 
@@ -55,9 +64,9 @@ public class TreeProblems {
 
   public boolean treesEqual(Map<Integer, String> tree1,Map<Integer, String> tree2 ) {
 
-    // INSERT CODE HERE
+    // comparing the two maps using the equals method
 
-    return false;
+    return tree1.equals(tree2);
 
   }
 
